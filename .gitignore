@@ -1,0 +1,49 @@
+myenv
+venv/*
+./chat/__pycache__
+./decora/__pycache__
+./util/__pycache__
+.env
+*.pyc
+.serverless
+serverless.yml
+
+# Python-specific
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.db
+
+# Environment-specific
+venv/
+.env
+venv/*
+# Editor/IDE-specific
+.vscode/
+.idea/
+
+# Dependency management
+pip-lock.txt
+Pipfile.lock
+Pipfile
+
+# Compiled Python files
+*.pyc
+__pycache__/
+
+# OS or Editor-generated files
+.DS_Store
+Thumbs.db
+
+# Compiled binaries or libraries
+*.so
+*.dylib
+*.dll
+
+# Logs and temporary files
+*.log
+*.swp
+*~
+.env
