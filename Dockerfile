@@ -1,21 +1,20 @@
-# Use the base Ubuntu 20.04 image
-FROM ubuntu:20.04
+# Usar una imagen base de Python
+FROM python:3.11
 
-# Update and install required dependencies
-RUN apt-get update && apt-get install -y python3 python3-pip python3-venv
-
-# Set the working directory inside the container
+# Establecer el directorio de trabajo en /app
 WORKDIR /app
 
-# Copy the requirements.txt file to /app
-COPY requirements.txt .
+# Copiar el archivo requirements.txt al contenedor en /app
+COPY requirements.txt requirements.txt
 
-# Activate the virtual environment and install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Instalar las dependencias del proyecto
+RUN pip install -r requirements.txt
 
-# Copy the contents of your application to the working directory
+# Copiar el contenido de la aplicación al contenedor en /app
 COPY . .
 
-EXPOSE 4003
+# Exponer el puerto 5000 para Flask (ajusta el puerto según tu configuración)
+EXPOSE 5002
 
-ENTRYPOINT ["python3", "app.py"]
+# Comando para iniciar la aplicación Flask
+CMD ["python", "app.py"]
