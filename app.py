@@ -6,7 +6,9 @@ from waitress import serve
 
 load_dotenv()
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins="https://voist.me")
+
+
 app.register_blueprint(chat_bp)
 
 if __name__ == '__main__':
