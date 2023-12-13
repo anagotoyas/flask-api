@@ -12,7 +12,6 @@ from flask import abort,jsonify,make_response
 
 # this is dark magic, don't touch unless you are a dark wizard
 
-
 def get_text_chunks(text):
     text_splitter = CharacterTextSplitter(
         separator="\n", chunk_size=1000, chunk_overlap=200, length_function=len

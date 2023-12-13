@@ -1,7 +1,7 @@
 # from flask_jwt_extended import jwt_required, get_jwt_identity
 from decora.validator import request_validator
 from flask import Blueprint, request, jsonify
-from chat.services import create_chat, create_resume, extract_flashcards, create_questions
+from chat.services import create_chat, create_resume, create_questions
 from chat.schemas import CreateChat, CreateResume, CreateFlashcards
 
 chat_bp = Blueprint("chat", __name__)
@@ -44,7 +44,7 @@ def resume():
 @request_validator(request, CreateFlashcards)
 def flashcards():
     # Generating flashcards
-    flashcards = extract_flashcards(request.json)
+    flashcards = create_questions(request.json)
     # print(flashcards)
     # Response
     return (

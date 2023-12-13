@@ -3,8 +3,10 @@ from chat.utils import (
     get_text_chunks,
     get_vectorstore,
     get_conversation_chain,
+    
 )
 import re
+import json
 from flask import abort,jsonify,make_response
 
 
@@ -41,67 +43,25 @@ def create_questions(obj_chat):
     
 
     raw_text = get_pdf_text(obj_chat["url_pdf"])
+    print(obj_chat["url_pdf"])
     # get the text chunks
     text_chunks = get_text_chunks(raw_text)
     # create vector store
     vectorstore = get_vectorstore(text_chunks)
 
-    questions = get_conversation_chain(vectorstore, "Dame preguntas sobre la información más importante")
+    questions = get_conversation_chain(vectorstore, "Crea preguntas y respuestas sobre el documento. Cada pregunta y respuesta será un objeto y estará en un array de objetos, se seguirá este formato: {[pregunta: 'ejemplo pregunta', respuesta: 'ejemplo respuesta']}. En caso no se pueda obtener preguntas, se devolverá un mensaje en formato json siguiendo este formato: {error: 'Error no se pudo generar preguntas'}")
 
-    
-
-    elementos_separados = questions.split("\n")
-
-# Almacenar los elementos en un array
-    array_elementos = []
-    for elemento in elementos_separados:
-        array_elementos.append(elemento)
-
-    # Imprimir el array resultante
-
-    filtered_list = list(filter(bool, array_elementos))
-
-    print(filtered_list)
-
-    return filtered_list
+    print(questions)
+    try:
+        questions = json.loads(questions)
         
-        
-
-
-def extract_flashcards(obj_chat):
-    # Call create_questions to generate questions dynamically
-    preguntas = create_questions(obj_chat)
-    raw_text = get_pdf_text(obj_chat["url_pdf"])
-    # get the text chunks
-    text_chunks = get_text_chunks(raw_text)
-    vectorstore = get_vectorstore(text_chunks)
-
-    if len(preguntas) == 1:
-        error_message = {"error": "No se encontraron preguntas en el documento."}
+    except:
+        error_message = {"error": "Failed to generate questions"}
         response = make_response(jsonify(error_message), 400)
         response.headers["Content-Type"] = "application/json"
         abort(response)
 
 
 
-    preguntas_respuestas = []
-
-    for pregunta in preguntas:
-    # Obtener la respuesta del sistema para cada pregunta
-        respuesta = get_conversation_chain(vectorstore, pregunta)
-       
+    return questions
     
-        # Crear objeto con pregunta y respuesta
-        objeto_pregunta_respuesta = {
-            "pregunta": pregunta,
-            "respuesta": respuesta
-        }
-    
-        # Agregar objeto al array
-        preguntas_respuestas.append(objeto_pregunta_respuesta)
-
-
-    print(preguntas_respuestas)
-
-
-    return preguntas_respuestas
