@@ -8,3 +8,8 @@ class CreateChat(Schema):
     question = fields.String(required=True, validate=not_blank)
 class CreateResume(Schema):
     url_pdf = fields.String(required=False, validate=not_blank)
+
+class CreateFlashcards(Schema):
+    url_pdf = fields.String(required=False, validate=not_blank)
+
+  

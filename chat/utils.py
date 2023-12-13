@@ -8,6 +8,7 @@ import requests
 from io import BytesIO
 from transformers import pipeline
 import PyPDF2
+from flask import abort,jsonify,make_response
 
 # this is dark magic, don't touch unless you are a dark wizard
 
@@ -39,17 +40,20 @@ def get_conversation_chain(
     )
 
     answer = conversation_chain.run({"question": question})
-    return answer
 
+   
+
+
+    return answer
 
 def get_pdf_text(url):
     text = ""
 
-    # Descarga el archivo PDF
-    response = requests.get(url)
+    try:
+        # Descarga el archivo PDF
+        response = requests.get(url)
+        response.raise_for_status()  # Raises an HTTPError for bad responses (4xx or 5xx)
 
-    # Comprueba que la solicitud fue exitosa
-    if response.status_code == 200:
         # Crea un objeto BytesIO a partir del contenido del PDF
         pdf_file = BytesIO(response.content)
 
@@ -60,8 +64,16 @@ def get_pdf_text(url):
         for page in pdf_reader.pages:
             partText = page.extract_text()
             text += partText
-    else:
-        print("No se pudo descargar el archivo.")
+
+    except requests.exceptions.RequestException as e:
+        print(f"No se pudo descargar el archivo. Error: {e}")
+        error_message = {"error": "Failed to download the file."}
+        response = make_response(jsonify(error_message), 400)
+        response.headers["Content-Type"] = "application/json"
+        abort(response)
+
+
+      
 
     return text
 
