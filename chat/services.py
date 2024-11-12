@@ -29,10 +29,12 @@ def create_chat(obj_chat):
 
 def create_resume(obj_chat):
     print(obj_chat)
-    question = "Dame un resumen de 1 hoja, resaltando puntos y detalles importantes, separalo por parrafos"
+    question = "Dame un resumen de una hoja o menos, resaltando puntos y detalles importantes, separalo por parrafos en caso si se pudiese, de caso contrario solo dame una idea general"
     raw_text = get_pdf_text(obj_chat["url_pdf"])
     # get the text chunks
     text_chunks = get_text_chunks(raw_text)
+
+    print(text_chunks, "texto")
     # create vector store
     vectorstore = get_vectorstore(text_chunks)
     # Generating an answer
@@ -49,11 +51,16 @@ def create_questions(obj_chat):
     # create vector store
     vectorstore = get_vectorstore(text_chunks)
 
-    questions = get_conversation_chain(vectorstore, "Crea preguntas y respuestas sobre el documento. Cada pregunta y respuesta será un objeto y estará en un array de objetos, se seguirá este formato: {[pregunta: 'ejemplo pregunta', respuesta: 'ejemplo respuesta']}. En caso no se pueda obtener preguntas, se devolverá un mensaje en formato json siguiendo este formato: {error: 'Error no se pudo generar preguntas'}")
+    print(text_chunks, "texto")
 
-    print(questions)
+    questions = get_conversation_chain(vectorstore, "Crea preguntas y respuestas, al menos una, respecto al contenido que te estoy pasando, como para evaluar si entendió lo que dice el contenido. Cada pregunta y respuesta será un objeto y estará en un array de objetos, se seguirá este formato: {['pregunta': 'ejemplo pregunta', 'respuesta': 'ejemplo respuesta']}. Trata por favor, de al menos generar una pregunta con su respectiva respuesta y como máximo cinco, tu decide la cantidad en base a la información proporcionada, ten en cuenta que aunque sea una sola pregunta y respuesta, debe devolverla en un array del objeto previamente mencionado")
+
     try:
-        questions = json.loads(questions)
+        if isinstance(questions, str):  
+            questions = eval(str(questions))
+        else:
+            questions = questions
+        
         
     except:
         error_message = {"error": "Failed to generate questions"}

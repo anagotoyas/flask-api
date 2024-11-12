@@ -8,7 +8,7 @@ WORKDIR /app
 COPY requirements.txt requirements.txt
 
 # Instalar las dependencias del proyecto
-RUN pip install -r requirements.txt
+RUN python3.11 -m pip install -r requirements.txt
 
 # Copiar el contenido de la aplicación al contenedor en /app
 COPY . .

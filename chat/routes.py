@@ -45,7 +45,6 @@ def resume():
 def flashcards():
     # Generating flashcards
     flashcards = create_questions(request.json)
-    # print(flashcards)
     # Response
     return (
         jsonify(flashcards),
