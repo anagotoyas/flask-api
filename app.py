@@ -6,7 +6,7 @@ from waitress import serve
 
 load_dotenv()
 app = Flask(__name__)
-CORS(app, origins=["https://voist.me","http://localhost:5173"])
+CORS(app, origins=["https://voist.me","http://localhost:5173", "https://voist.netlify.app"])
 
 
 app.register_blueprint(chat_bp)
